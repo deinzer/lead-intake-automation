@@ -34,6 +34,12 @@
               "name": "intent",
               "value": "={{ $json.body.intent }}",
               "type": "string"
+            },
+            {
+              "id": "de8a8274-9e7b-4d7b-8f01-5080168730d3",
+              "name": "preferred_demo_time",
+              "value": "={{ $json.body.preferred_demo_time }}",
+              "type": "string"
             }
           ]
         },
@@ -66,7 +72,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        352,
+        576,
         -16
       ],
       "id": "5b12d8f9-4436-466c-b67d-f8ce4b7fb859",
@@ -99,7 +105,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        560,
+        784,
         0
       ],
       "id": "47e6dbc2-1545-425a-9bd7-54b22ca4983c",
@@ -141,7 +147,7 @@
             {
               "id": "bf9ca417-30d2-46f5-9689-e3520d116a3c",
               "name": "priority",
-              "value": "high",
+              "value": "hot",
               "type": "string"
             }
           ]
@@ -152,7 +158,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        784,
+        1008,
         -96
       ],
       "id": "8c011f53-e2a1-48cd-aa4b-1abfa4a49a1c",
@@ -188,7 +194,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        736,
+        960,
         32
       ],
       "id": "dd694fde-0653-419d-8dde-5e4ea0ed6d3e",
@@ -317,7 +323,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1008,
+        1680,
         -96
       ],
       "id": "2f955101-09e5-4b1e-bdb8-4a25d539345d",
@@ -446,8 +452,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        960,
-        32
+        1488,
+        224
       ],
       "id": "5706ca4a-8098-4278-afa5-ae2d2b735fda",
       "name": "Insert row1"
@@ -519,7 +525,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        128,
+        352,
         0
       ],
       "id": "979d2f56-d884-422d-82cc-e1b07b31bd8b",
@@ -544,7 +550,7 @@
             {
               "id": "7134510d-ab72-4e12-8afa-c27d10e6b3f0",
               "name": "priority",
-              "value": "low",
+              "value": "invalid",
               "type": "string"
             }
           ]
@@ -555,7 +561,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        320,
+        544,
         192
       ],
       "id": "6b256b47-8ad4-4cdc-9b9f-e00ff5401c23",
@@ -570,8 +576,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1232,
-        -96
+        2800,
+        -224
       ],
       "id": "2e6f85bd-2934-4128-8b1a-dcfdf73e1954",
       "name": "Respond to Webhook"
@@ -585,8 +591,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1152,
-        48
+        1824,
+        224
       ],
       "id": "9d0d7aac-e468-43b4-88d3-77043efb4a5d",
       "name": "Respond to Webhook1"
@@ -600,7 +606,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        736,
+        960,
         192
       ],
       "id": "667dfc81-6b34-4b74-bea1-6a3d937af06d",
@@ -729,11 +735,865 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        496,
+        720,
         192
       ],
       "id": "005e9efd-d806-46d5-b5c2-8ddd8f4d22c2",
       "name": "Insert row2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71d62c45-950a-488c-9428-0e48733ed335",
+              "name": "lead_id",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "0598c097-0ab0-4442-b167-10dc8e204bde",
+              "name": "received_id",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        0
+      ],
+      "id": "29f4de7b-231c-401e-91c1-5fc7406c9a9a",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e20616eb-eb6e-434a-98f9-27b5d1d67b08",
+              "leftValue": "={{ $json.employees }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        32
+      ],
+      "id": "4c47f644-a7d5-40ae-9010-0cbe8934dc34",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc67ce6a-e108-46fb-8439-479ccb4c2cf1",
+              "name": "lead_status",
+              "value": "review",
+              "type": "string"
+            },
+            {
+              "id": "ed0d99cd-a48b-4ea6-b989-988943870f7f",
+              "name": "next_action",
+              "value": "sales_team_review",
+              "type": "string"
+            },
+            {
+              "id": "e4597278-81b3-461e-943e-dd4ca2c51811",
+              "name": "priority",
+              "value": "warm",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1408,
+        32
+      ],
+      "id": "fa964502-c844-445b-9e39-e862acb6efe3",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CMoCs7gkLU3qJ8nA",
+          "mode": "list",
+          "cachedResultName": "crm_lead_intake_test",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/CMoCs7gkLU3qJ8nA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "employees": "={{ $json.employees }}",
+            "plan": "={{ $json.plan }}",
+            "intent": "={{ $json.intent }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "next_action": "={{ $json.next_action }}",
+            "priority": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "plan",
+              "displayName": "plan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        32
+      ],
+      "id": "04d8fe2c-946a-4603-9ade-98c14c95aafd",
+      "name": "Insert row3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields6').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields6').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields6').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2720,
+        32
+      ],
+      "id": "5c4a6055-0a54-4f2c-a2cd-e122a43d6031",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "next_action": "={{ $json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2576,
+        -224
+      ],
+      "id": "fb09f5e1-5b43-4240-9b47-b42aaf5d56be",
+      "name": "Insert row4"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "next_action": "={{ $json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2512,
+        32
+      ],
+      "id": "062d808d-e4bb-4b3f-a41c-3af3f3f0bd41",
+      "name": "Insert row5"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qrlE8BKFUiVdywoJ",
+          "mode": "list",
+          "cachedResultName": "demo_booking",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/qrlE8BKFUiVdywoJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "booking_id": "={{ $execution.id }}",
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "preferred_demo_time": "={{ $('Edit Fields5').item.json.preferred_demo_time }}",
+            "booking_status": "confirmed",
+            "name": "={{ $('Insert row').item.json.name }}",
+            "company": "={{ $('Insert row').item.json.company }}",
+            "lead_score": "={{ $('Insert row').item.json.lead_score }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "booking_id",
+              "displayName": "booking_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferred_demo_time",
+              "displayName": "preferred_demo_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "booking_status",
+              "displayName": "booking_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2352,
+        -224
+      ],
+      "id": "376f0996-d24e-4410-9eac-10540c54f085",
+      "name": "Insert row6"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "9WMRqgWMH3JUlDnX",
+          "mode": "list",
+          "cachedResultName": "calendar_slots",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/9WMRqgWMH3JUlDnX"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "slot_start",
+              "keyValue": "={{ $('Edit Fields5').item.json.preferred_demo_time }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1904,
+        -96
+      ],
+      "id": "c725864c-6e70-45a1-955c-18b4cd21ea9e",
+      "name": "check calendar slot"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd250872-a173-4bff-8488-a7c3ead0b875",
+              "leftValue": "={{ $json.slot_status }}",
+              "rightValue": "available",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2128,
+        -96
+      ],
+      "id": "1e13156b-3a38-418e-8ace-cc89dd621107",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qrlE8BKFUiVdywoJ",
+          "mode": "list",
+          "cachedResultName": "demo_booking",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/qrlE8BKFUiVdywoJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "booking_id": "={{ $execution.id }}",
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "preferred_demo_time": "={{ $('Edit Fields5').item.json.preferred_demo_time }}",
+            "booking_status": "waitlist",
+            "name": "={{ $('Insert row').item.json.name }}",
+            "company": "={{ $('Insert row').item.json.company }}",
+            "lead_score": "={{ $('Insert row').item.json.lead_score }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "booking_id",
+              "displayName": "booking_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferred_demo_time",
+              "displayName": "preferred_demo_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "booking_status",
+              "displayName": "booking_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2352,
+        -80
+      ],
+      "id": "9f4b62d0-d65d-4e2a-b756-98806d1ae064",
+      "name": "Insert row7"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "next_action": "={{ $json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        -80
+      ],
+      "id": "ae8d3c32-1814-4266-a5f6-9fbb44629030",
+      "name": "Insert row8"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields2').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields2').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields2').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2704,
+        -80
+      ],
+      "id": "76665626-59b6-4837-8511-4b53408ef6b0",
+      "name": "Respond to Webhook4"
     }
   ],
   "pinData": {},
@@ -742,7 +1602,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "Edit Fields5",
             "type": "main",
             "index": 0
           }
@@ -804,7 +1664,7 @@
       "main": [
         [
           {
-            "node": "Insert row1",
+            "node": "If2",
             "type": "main",
             "index": 0
           }
@@ -833,7 +1693,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "check calendar slot",
             "type": "main",
             "index": 0
           }
@@ -872,6 +1732,141 @@
           }
         ]
       ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Insert row3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row3": {
+      "main": [
+        [
+          {
+            "node": "Insert row5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row5": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row6": {
+      "main": [
+        [
+          {
+            "node": "Insert row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check calendar slot": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Insert row6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row7": {
+      "main": [
+        [
+          {
+            "node": "Insert row8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row8": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -879,7 +1874,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "c764ac77-f604-4a56-a26f-9c2c671c62ef",
+  "versionId": "38b5b107-d3cd-4679-ba9b-8502116eb30e",
   "meta": {
     "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
   },
