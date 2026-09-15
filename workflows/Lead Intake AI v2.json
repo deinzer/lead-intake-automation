@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        960,
+        1184,
         32
       ],
       "id": "d64aad71-2ae6-4a2e-abdb-2842df0866ab",
@@ -167,7 +167,9 @@
             "intent": "={{ $json.intent }}",
             "lead_status": "={{ $json.lead_status }}",
             "next_action": "={{ $json.next_action }}",
-            "priority": "={{ $json.priority }}"
+            "priority": "={{ $json.priority }}",
+            "raw_message": "={{ $('Prepare AI Input').item.json.raw_message }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -254,6 +256,26 @@
             {
               "id": "priority",
               "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -296,7 +318,9 @@
             "lead_status": "={{ $json.lead_status }}",
             "lead_score": "={{ $json.lead_score }}",
             "next_action": "={{ $json.next_action }}",
-            "priority": "={{ $json.priority }}"
+            "priority": "={{ $json.priority }}",
+            "raw_message": "={{ $('Prepare AI Input').item.json.raw_message }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -389,6 +413,26 @@
               "type": "string",
               "readOnly": false,
               "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -399,7 +443,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1488,
+        1712,
         224
       ],
       "id": "5d58a200-1850-4b61-9379-06a1efa05f11",
@@ -453,6 +497,15 @@
                 "operation": "notEmpty",
                 "singleValue": true
               }
+            },
+            {
+              "id": "18edc760-bf50-4216-b0e3-647496be22fc",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
             }
           ],
           "combinator": "and"
@@ -475,19 +528,25 @@
             {
               "id": "04817a31-f9b1-4645-a017-777cdf3da7db",
               "name": "lead_status",
-              "value": "incomplete",
+              "value": "ai_review",
               "type": "string"
             },
             {
               "id": "79bae630-7a76-4296-9f02-3b604ea48574",
               "name": "next_action",
-              "value": "notify_human",
+              "value": "human_check_ai_extraction",
               "type": "string"
             },
             {
               "id": "7134510d-ab72-4e12-8afa-c27d10e6b3f0",
               "name": "priority",
-              "value": "invalid",
+              "value": "warm",
+              "type": "string"
+            },
+            {
+              "id": "45fd042f-d614-4b88-be08-43ecc95cb802",
+              "name": "ai_review_reason",
+              "value": "missing_required_lead_data",
               "type": "string"
             }
           ]
@@ -528,7 +587,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        1824,
+        2048,
         224
       ],
       "id": "d20bc9ea-65a2-43ae-b4cc-abdb55cfb29b",
@@ -543,7 +602,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        960,
+        1184,
         192
       ],
       "id": "236fc422-91be-4cce-874a-381d01270db4",
@@ -569,7 +628,9 @@
             "lead_score": "=\n",
             "next_action": "={{ $json.next_action }}",
             "lead_status": "={{ $json.lead_status }}",
-            "priority": "={{ $json.priority }}"
+            "priority": "={{ $json.priority }}",
+            "raw_message": "={{ $json.raw_message }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -656,6 +717,26 @@
             {
               "id": "priority",
               "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -735,7 +816,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1184,
+        1408,
         32
       ],
       "id": "ffc5ba6f-1f0e-40ae-86a0-06511b7b631c",
@@ -771,7 +852,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        1408,
+        1632,
         32
       ],
       "id": "787cb2c0-db78-4f92-aef5-2cbc25473fe6",
@@ -797,7 +878,9 @@
             "lead_score": "={{ $json.lead_score }}",
             "lead_status": "={{ $json.lead_status }}",
             "next_action": "={{ $json.next_action }}",
-            "priority": "={{ $json.priority }}"
+            "priority": "={{ $json.priority }}",
+            "raw_message": "={{ $('Prepare AI Input').item.json.raw_message }}",
+            "email": "={{ $json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -890,6 +973,26 @@
               "type": "string",
               "readOnly": false,
               "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -900,7 +1003,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        1600,
+        1824,
         32
       ],
       "id": "bc61b30f-f9af-47c6-904b-2d2589a16000",
@@ -915,7 +1018,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2720,
+        2944,
         32
       ],
       "id": "c316f52e-14d2-483d-bb94-df1a568e1c0d",
@@ -939,7 +1042,8 @@
             "lead_score": "={{ $json.lead_score }}",
             "priority": "={{ $('Edit Fields2').item.json.priority }}",
             "next_action": "={{ $('Edit Fields2').item.json.next_action }}",
-            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -1006,6 +1110,16 @@
             {
               "id": "received_at",
               "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -1046,7 +1160,8 @@
             "lead_score": "={{ $json.lead_score }}",
             "priority": "={{ $json.priority }}",
             "next_action": "={{ $json.next_action }}",
-            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -1119,6 +1234,16 @@
               "type": "string",
               "readOnly": false,
               "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -1129,7 +1254,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        2512,
+        2736,
         32
       ],
       "id": "ccd61e9f-aa08-45ac-9f41-ec0cfbb55c2b",
@@ -1428,7 +1553,8 @@
             "lead_score": "={{ $json.lead_score }}",
             "priority": "={{ $json.priority }}",
             "next_action": "={{ $json.next_action }}",
-            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -1501,6 +1627,16 @@
               "type": "string",
               "readOnly": false,
               "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -1534,34 +1670,11 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "199c92dd-0d52-45a4-b689-e3495b2df0e1",
-              "name": "raw_message",
-              "value": "={{ $json.body.message }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.5,
-      "position": [
-        -496,
-        -128
-      ],
-      "id": "d33c7b94-c277-4654-8d91-b47161ab4a88",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
         "text": "={{ $json.raw_message }}",
         "schemaType": "manual",
-        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"company\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"employees\": {\n      \"type\": [\"number\", \"null\"]\n    },\n    \"plan\": {\n      \"type\": [\"string\", \"null\"],\n      \"enum\": [\"Starter\", \"Enterprise\", null]\n    },\n    \"intent\": {\n      \"type\": [\"string\", \"null\"],\n      \"enum\": [\"demo\", \"information\", null]\n    },\n    \"preferred_demo_time\": {\n      \"type\": [ \"string\", null]\n    }\n  },\n  \"required\": [\"name\", \"company\", \"employees\", \"plan\", \"intent\", \"preferred_demo_time\"],\n  \"additionalProperties\": false\n}",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": [\"string\", null]\n    },\n    \"company\": {\n      \"type\": [\"string\", null]\n    },\n    \"employees\": {\n      \"type\": [\"number\", null]\n    },\n    \"plan\": {\n      \"type\": [\"string\", null],\n      \"enum\": [\"Starter\", \"Enterprise\", null]\n    },\n    \"intent\": {\n      \"type\": [\"string\", null],\n      \"enum\": [\"demo\", \"information\", null]\n    },\n    \"preferred_demo_time\": {\n      \"type\": [ \"string\", null]\n    },\n    \"email\": {\n      \"type\": [ \"string\", null]\n    }\n  },\n  \"required\": [\"name\", \"company\", \"employees\", \"plan\", \"intent\", \"preferred_demo_time\", \"email\"],\n  \"additionalProperties\": false\n}",
         "options": {
-          "systemPromptTemplate": "You extract structured lead data from a customer message.\n\nClassify intent carefully:\n- \"demo\" means the lead requests a demo, meeting, call, appointment, or product presentation.\n- \"information\" means the lead requests information, details, a reply, material, or wants to learn more.\n- null means the message contains no request or the request is unclear.\n\nExample:\nMessage: \"Could someone send information?\"\nCorrect intent: \"information\"\n\nClassify plan carefully:\n- Return \"Starter\" only when the lead clearly chooses or prefers Starter.\n- Return \"Enterprise\" only when the lead clearly chooses or prefers Enterprise.\n- Return null when the lead mentions both plans, is comparing plans, has no preference, or does not mention a plan.\n\nExample:\nMessage: \"We are comparing Starter and Enterprise.\"\nCorrect plan: null\n\nUse the schema exactly. Do not invent values."
+          "systemPromptTemplate": "You extract structured lead data from a customer message.\n\nRules:\nNever invent anything \n\nClassify intent carefully:\n- \"demo\" means the lead requests a demo, meeting, call, appointment, or product presentation.\n- \"information\" means the lead requests information, details, a reply, material, or wants to learn more.\n- null means the message contains no request or the request is unclear.\n\nExample:\nMessage: \"Could someone send information?\"\nCorrect intent: \"information\"\n\nClassify plan carefully:\n- Return \"Starter\" only when the lead clearly chooses or prefers Starter.\n- Return \"Enterprise\" only when the lead clearly chooses or prefers Enterprise.\n- Return null when the lead mentions both plans, is comparing plans, has no preference, or does not mention a plan.\n\nExample:\nMessage: \"We are comparing Starter and Enterprise.\"\nCorrect plan: null\n\nUse the schema exactly. Do not invent values."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
@@ -1592,6 +1705,29 @@
           "name": "Ollama account 3"
         }
       }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "199c92dd-0d52-45a4-b689-e3495b2df0e1",
+              "name": "raw_message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -496,
+        -128
+      ],
+      "id": "d33c7b94-c277-4654-8d91-b47161ab4a88",
+      "name": "Prepare AI Input"
     },
     {
       "parameters": {
@@ -1632,6 +1768,18 @@
               "name": "preferred_demo_type",
               "value": "={{ $json.output.preferred_demo_time }}",
               "type": "string"
+            },
+            {
+              "id": "a7a8e5a7-91a4-4e29-9c2e-8b392053c973",
+              "name": "raw_message",
+              "value": "={{ $('Prepare AI Input').item.json.raw_message }}",
+              "type": "string"
+            },
+            {
+              "id": "afedf7d4-52d5-4878-83a9-d5e20a46f17a",
+              "name": "email",
+              "value": "={{ $json.output.email }}",
+              "type": "string"
             }
           ]
         },
@@ -1644,7 +1792,92 @@
         -128
       ],
       "id": "365e436c-3c95-450a-9abc-68e71f29b10b",
-      "name": "Edit Fields7"
+      "name": "Flatten AI result"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "Bn5degVcrnl837PL",
+          "mode": "list",
+          "cachedResultName": "ai_review_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/Bn5degVcrnl837PL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "raw_message": "={{ $('Edit Fields5').item.json.raw_message }}",
+            "ai_review_reason": "={{ $('Edit Fields4').item.json.ai_review_reason }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}",
+            "email": "={{ $('Edit Fields5').item.json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_review_reason",
+              "displayName": "ai_review_reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        944,
+        192
+      ],
+      "id": "8293158b-829a-4001-bb5f-bfe59e4df41b",
+      "name": "Insert row9"
     }
   ],
   "pinData": {},
@@ -1664,7 +1897,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "Prepare AI Input",
             "type": "main",
             "index": 0
           }
@@ -1766,7 +1999,7 @@
       "main": [
         [
           {
-            "node": "Respond to Webhook2",
+            "node": "Insert row9",
             "type": "main",
             "index": 0
           }
@@ -1908,22 +2141,11 @@
         ]
       ]
     },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Information Extractor",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Information Extractor": {
       "main": [
         [
           {
-            "node": "Edit Fields7",
+            "node": "Flatten AI result",
             "type": "main",
             "index": 0
           }
@@ -1941,7 +2163,18 @@
         ]
       ]
     },
-    "Edit Fields7": {
+    "Prepare AI Input": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten AI result": {
       "main": [
         [
           {
@@ -1951,6 +2184,22 @@
           }
         ]
       ]
+    },
+    "Insert row9": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook2": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
@@ -1958,7 +2207,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "f51b84ae-9963-45cc-97bc-61528bce7021",
+  "versionId": "2cc3d2ca-f9bc-4393-a8ef-4ce4f7707e10",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
