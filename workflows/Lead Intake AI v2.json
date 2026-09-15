@@ -1,0 +1,1969 @@
+{
+  "name": "Lead Intake AI v2",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "28164657-58ef-4d32-a6d8-fabcbb6888aa",
+              "name": "lead_score",
+              "value": "={{ ($json.plan === 'Enterprise' ? 40 : 0) + ($json.intent === 'demo' ? 30 : 0) + ($json.employees >= 100 ? 30 : 0) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        576,
+        -16
+      ],
+      "id": "39a1101c-936c-4d48-8e3c-ea9a69e439a5",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2200e116-4b07-4a61-a7de-97ac815ef78e",
+              "leftValue": "={{ $json.lead_score }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        784,
+        0
+      ],
+      "id": "3c6a52cd-b279-4f51-84b0-496469894fa9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4858a99a-4094-49b0-98e5-53e8879992fe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -640,
+        -128
+      ],
+      "id": "e01fd5e1-9aa9-4739-bb5d-b48ef1bb21a8",
+      "name": "Webhook",
+      "webhookId": "4858a99a-4094-49b0-98e5-53e8879992fe"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a439818c-8b5d-4b95-b0bd-64864afb6409",
+              "name": "lead_status",
+              "value": "qualified",
+              "type": "string"
+            },
+            {
+              "id": "8f8cb400-4a01-4b4f-a29b-810332a17fa7",
+              "name": "next_action",
+              "value": "contact_sales",
+              "type": "string"
+            },
+            {
+              "id": "bf9ca417-30d2-46f5-9689-e3520d116a3c",
+              "name": "priority",
+              "value": "hot",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1008,
+        -96
+      ],
+      "id": "61866b23-2276-43a2-a998-c1dc182e4293",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "62d402b6-2014-4dac-9f69-64b11d67c128",
+              "name": "lead_status",
+              "value": "nurture",
+              "type": "string"
+            },
+            {
+              "id": "21a9d3a1-5415-4abf-a2d5-d5eab59df34b",
+              "name": "next_action",
+              "value": "send_information",
+              "type": "string"
+            },
+            {
+              "id": "9fac7c86-9f2a-4d64-8baf-90c613be44cc",
+              "name": "priority",
+              "value": "low",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        960,
+        32
+      ],
+      "id": "d64aad71-2ae6-4a2e-abdb-2842df0866ab",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CMoCs7gkLU3qJ8nA",
+          "mode": "list",
+          "cachedResultName": "crm_lead_intake_test",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/CMoCs7gkLU3qJ8nA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "employees": "={{ $json.employees }}",
+            "plan": "={{ $json.plan }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "intent": "={{ $json.intent }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "next_action": "={{ $json.next_action }}",
+            "priority": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "plan",
+              "displayName": "plan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        -96
+      ],
+      "id": "7267316e-c91c-40c0-9ef3-3d2132a1a5bd",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CMoCs7gkLU3qJ8nA",
+          "mode": "list",
+          "cachedResultName": "crm_lead_intake_test",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/CMoCs7gkLU3qJ8nA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Edit Fields1').item.json.name }}",
+            "company": "={{ $('Edit Fields1').item.json.company }}",
+            "employees": "={{ $('Edit Fields1').item.json.employees }}",
+            "plan": "={{ $('Edit Fields1').item.json.plan }}",
+            "intent": "={{ $('Edit Fields1').item.json.intent }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "next_action": "={{ $json.next_action }}",
+            "priority": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "plan",
+              "displayName": "plan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        224
+      ],
+      "id": "5d58a200-1850-4b61-9379-06a1efa05f11",
+      "name": "Insert row1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "58be97b7-362d-466d-837a-9338ac723f13",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d3fbc620-40b7-4323-9eee-1345f211a67b",
+              "leftValue": "={{ $json.company }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "9beb0bd6-be71-407c-8046-d04008591e2c",
+              "leftValue": "={{ $json.employees }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "2c004b54-772b-4ccc-81c7-a6663832d343",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        352,
+        0
+      ],
+      "id": "597c98b3-2aca-41c0-9d58-9ff601ea2aa5",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "04817a31-f9b1-4645-a017-777cdf3da7db",
+              "name": "lead_status",
+              "value": "incomplete",
+              "type": "string"
+            },
+            {
+              "id": "79bae630-7a76-4296-9f02-3b604ea48574",
+              "name": "next_action",
+              "value": "notify_human",
+              "type": "string"
+            },
+            {
+              "id": "7134510d-ab72-4e12-8afa-c27d10e6b3f0",
+              "name": "priority",
+              "value": "invalid",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        544,
+        192
+      ],
+      "id": "dd6dad4e-db14-47d0-bfe0-b8300cfb4c8e",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields2').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields2').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields2').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2800,
+        -224
+      ],
+      "id": "f2feee24-9446-40e3-b623-489cb6277b51",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields3').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields3').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields3').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1824,
+        224
+      ],
+      "id": "d20bc9ea-65a2-43ae-b4cc-abdb55cfb29b",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields4').item.json.lead_status }}\",\n  \"priority\":  \"{{ $('Edit Fields4').item.json.priority }}\",\n  \"next_action\": \"{{ $('Edit Fields4').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        960,
+        192
+      ],
+      "id": "236fc422-91be-4cce-874a-381d01270db4",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CMoCs7gkLU3qJ8nA",
+          "mode": "list",
+          "cachedResultName": "crm_lead_intake_test",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/CMoCs7gkLU3qJ8nA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "employees": "={{ $json.employees }}",
+            "plan": "={{ $json.plan }}",
+            "intent": "={{ $json.intent }}",
+            "lead_score": "=\n",
+            "next_action": "={{ $json.next_action }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "priority": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "plan",
+              "displayName": "plan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        192
+      ],
+      "id": "adb5ff8c-c489-4c53-8533-2613136d710c",
+      "name": "Insert row2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71d62c45-950a-488c-9428-0e48733ed335",
+              "name": "lead_id",
+              "value": "={{ $execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "0598c097-0ab0-4442-b167-10dc8e204bde",
+              "name": "received_id",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        176,
+        0
+      ],
+      "id": "80d6797f-364e-43c6-87ad-b88baa031ee7",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e20616eb-eb6e-434a-98f9-27b5d1d67b08",
+              "leftValue": "={{ $json.employees }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        32
+      ],
+      "id": "ffc5ba6f-1f0e-40ae-86a0-06511b7b631c",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc67ce6a-e108-46fb-8439-479ccb4c2cf1",
+              "name": "lead_status",
+              "value": "review",
+              "type": "string"
+            },
+            {
+              "id": "ed0d99cd-a48b-4ea6-b989-988943870f7f",
+              "name": "next_action",
+              "value": "sales_team_review",
+              "type": "string"
+            },
+            {
+              "id": "e4597278-81b3-461e-943e-dd4ca2c51811",
+              "name": "priority",
+              "value": "warm",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1408,
+        32
+      ],
+      "id": "787cb2c0-db78-4f92-aef5-2cbc25473fe6",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "CMoCs7gkLU3qJ8nA",
+          "mode": "list",
+          "cachedResultName": "crm_lead_intake_test",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/CMoCs7gkLU3qJ8nA"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "employees": "={{ $json.employees }}",
+            "plan": "={{ $json.plan }}",
+            "intent": "={{ $json.intent }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "lead_status": "={{ $json.lead_status }}",
+            "next_action": "={{ $json.next_action }}",
+            "priority": "={{ $json.priority }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "plan",
+              "displayName": "plan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_status",
+              "displayName": "lead_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        32
+      ],
+      "id": "bc61b30f-f9af-47c6-904b-2d2589a16000",
+      "name": "Insert row3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields6').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields6').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields6').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2720,
+        32
+      ],
+      "id": "c316f52e-14d2-483d-bb94-df1a568e1c0d",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $('Edit Fields2').item.json.priority }}",
+            "next_action": "={{ $('Edit Fields2').item.json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2576,
+        -224
+      ],
+      "id": "56b346b4-7eaa-4a75-94cd-750914d7fbd2",
+      "name": "Insert row4"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "next_action": "={{ $json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2512,
+        32
+      ],
+      "id": "ccd61e9f-aa08-45ac-9f41-ec0cfbb55c2b",
+      "name": "Insert row5"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qrlE8BKFUiVdywoJ",
+          "mode": "list",
+          "cachedResultName": "demo_booking",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/qrlE8BKFUiVdywoJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "booking_id": "={{ $execution.id }}",
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "preferred_demo_time": "={{ $('Edit Fields1').item.json.preferred_demo_type }}",
+            "booking_status": "confirmed",
+            "name": "={{ $('Insert row').item.json.name }}",
+            "company": "={{ $('Insert row').item.json.company }}",
+            "lead_score": "={{ $('Insert row').item.json.lead_score }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "booking_id",
+              "displayName": "booking_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferred_demo_time",
+              "displayName": "preferred_demo_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "booking_status",
+              "displayName": "booking_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2352,
+        -224
+      ],
+      "id": "72f80788-6cf4-4dc4-aa47-23937718f91c",
+      "name": "Insert row6"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "9WMRqgWMH3JUlDnX",
+          "mode": "list",
+          "cachedResultName": "calendar_slots",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/9WMRqgWMH3JUlDnX"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "slot_start",
+              "keyValue": "={{ $('Edit Fields5').item.json.preferred_demo_type }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1904,
+        -96
+      ],
+      "id": "534fa659-25af-43f0-9119-dd5eb85e2dc4",
+      "name": "check calendar slot"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd250872-a173-4bff-8488-a7c3ead0b875",
+              "leftValue": "={{ $json.slot_status }}",
+              "rightValue": "available",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2128,
+        -96
+      ],
+      "id": "19fe7066-ecad-4e8c-b809-d527ddbe6490",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qrlE8BKFUiVdywoJ",
+          "mode": "list",
+          "cachedResultName": "demo_booking",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/qrlE8BKFUiVdywoJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "booking_id": "={{ $execution.id }}",
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "preferred_demo_time": "={{ $('Edit Fields5').item.json.preferred_demo_time }}",
+            "booking_status": "waitlist",
+            "name": "={{ $('Insert row').item.json.name }}",
+            "company": "={{ $('Insert row').item.json.company }}",
+            "lead_score": "={{ $('Insert row').item.json.lead_score }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "booking_id",
+              "displayName": "booking_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "preferred_demo_time",
+              "displayName": "preferred_demo_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "booking_status",
+              "displayName": "booking_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2352,
+        -80
+      ],
+      "id": "3727a4a4-2b48-4a69-ba01-6c6f8b6c43a6",
+      "name": "Insert row7"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "u89YG23QGs6fRC7r",
+          "mode": "list",
+          "cachedResultName": "sales_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/u89YG23QGs6fRC7r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "lead_id": "={{ $('Edit Fields5').item.json.lead_id }}",
+            "name": "={{ $json.name }}",
+            "company": "={{ $json.company }}",
+            "lead_score": "={{ $json.lead_score }}",
+            "priority": "={{ $json.priority }}",
+            "next_action": "={{ $json.next_action }}",
+            "received_at": "={{ $('Edit Fields5').item.json.received_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "next_action",
+              "displayName": "next_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        -80
+      ],
+      "id": "9683daaf-1244-4b9e-9a35-783a6244451e",
+      "name": "Insert row8"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"received\": true,\n  \"lead_status\": \"{{ $('Edit Fields2').item.json.lead_status }}\",\n  \"lead_score\":  {{ $('Edit Fields2').item.json.lead_score }},\n  \"next_action\": \"{{ $('Edit Fields2').item.json.next_action }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2704,
+        -80
+      ],
+      "id": "4349a3c0-439d-4770-9ec5-dc223509477b",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "199c92dd-0d52-45a4-b689-e3495b2df0e1",
+              "name": "raw_message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -496,
+        -128
+      ],
+      "id": "d33c7b94-c277-4654-8d91-b47161ab4a88",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.raw_message }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"name\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"company\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"employees\": {\n      \"type\": [\"number\", \"null\"]\n    },\n    \"plan\": {\n      \"type\": [\"string\", \"null\"],\n      \"enum\": [\"Starter\", \"Enterprise\", null]\n    },\n    \"intent\": {\n      \"type\": [\"string\", \"null\"],\n      \"enum\": [\"demo\", \"information\", null]\n    },\n    \"preferred_demo_time\": {\n      \"type\": [ \"string\", null]\n    }\n  },\n  \"required\": [\"name\", \"company\", \"employees\", \"plan\", \"intent\", \"preferred_demo_time\"],\n  \"additionalProperties\": false\n}",
+        "options": {
+          "systemPromptTemplate": "You extract structured lead data from a customer message.\n\nClassify intent carefully:\n- \"demo\" means the lead requests a demo, meeting, call, appointment, or product presentation.\n- \"information\" means the lead requests information, details, a reply, material, or wants to learn more.\n- null means the message contains no request or the request is unclear.\n\nExample:\nMessage: \"Could someone send information?\"\nCorrect intent: \"information\"\n\nClassify plan carefully:\n- Return \"Starter\" only when the lead clearly chooses or prefers Starter.\n- Return \"Enterprise\" only when the lead clearly chooses or prefers Enterprise.\n- Return null when the lead mentions both plans, is comparing plans, has no preference, or does not mention a plan.\n\nExample:\nMessage: \"We are comparing Starter and Enterprise.\"\nCorrect plan: null\n\nUse the schema exactly. Do not invent values."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -368,
+        -128
+      ],
+      "id": "ba922d61-acb7-46f5-ba27-467d20850312",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        128
+      ],
+      "id": "6c02264e-388d-4732-b20c-e94ec89805a5",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "BNQmbGhrIOyzTSi3",
+          "name": "Ollama account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97a632a1-0069-43ef-911f-59edbc4a0ffd",
+              "name": "name",
+              "value": "={{ $json.output.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4a8ce3f3-efe3-4d2e-b17a-e73ad3d3b903",
+              "name": "company",
+              "value": "={{ $json.output.company }}",
+              "type": "string"
+            },
+            {
+              "id": "b8f7171d-6613-4689-8b2f-b8acef57cc1d",
+              "name": "employees",
+              "value": "={{ $json.output.employees }}",
+              "type": "number"
+            },
+            {
+              "id": "ca1956a4-76be-4c2a-9331-ca81c9326ef1",
+              "name": "plan",
+              "value": "={{ $json.output.plan }}",
+              "type": "string"
+            },
+            {
+              "id": "5d014772-b0ab-469c-b167-3e9eeb2158e7",
+              "name": "intent",
+              "value": "={{ $json.output.intent }}",
+              "type": "string"
+            },
+            {
+              "id": "b72c278c-f59f-43b6-a238-769bc558f380",
+              "name": "preferred_demo_type",
+              "value": "={{ $json.output.preferred_demo_time }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -96,
+        -128
+      ],
+      "id": "365e436c-3c95-450a-9abc-68e71f29b10b",
+      "name": "Edit Fields7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "check calendar slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Insert row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Insert row3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row3": {
+      "main": [
+        [
+          {
+            "node": "Insert row5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row5": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row6": {
+      "main": [
+        [
+          {
+            "node": "Insert row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check calendar slot": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Insert row6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert row7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row7": {
+      "main": [
+        [
+          {
+            "node": "Insert row8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row8": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f51b84ae-9963-45cc-97bc-61528bce7021",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
+  },
+  "nodeGroups": [],
+  "id": "3n7rOFFVIRYbZlZE",
+  "tags": []
+}
