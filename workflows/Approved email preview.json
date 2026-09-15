@@ -1,0 +1,339 @@
+{
+  "name": "Approved email preview",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "30e5b78d-7101-4598-8625-28ec49f4b91a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "VbKERyS2qLfXXThx",
+          "mode": "list",
+          "cachedResultName": "nurture_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/VbKERyS2qLfXXThx"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "follow_up_status",
+              "keyValue": "approved_to_send"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "11bcdd17-78d9-4710-b4c9-0cb4a6eea2b9",
+      "name": "Get row(s)",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        0
+      ],
+      "id": "3a43eeb6-f55f-4e9a-bac4-0793c514f42c",
+      "name": "Send a message",
+      "webhookId": "fc6da00d-155f-4c71-abb1-8b651d67a386",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GNrTBOcCD4bddHPt",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "673bc54f-2070-4e4e-a6cc-da57e523b19a",
+              "name": "to",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "0dc2bf27-c8c1-49ef-bcbc-602460c1e01e",
+              "name": "subject",
+              "value": "={{ $json.email_subject }}",
+              "type": "string"
+            },
+            {
+              "id": "df3d523a-081e-421a-a54e-171ae8b18bee",
+              "name": "body",
+              "value": "={{ $json.email_body }}",
+              "type": "string"
+            },
+            {
+              "id": "ba8eb765-5442-4be3-8a77-33ddcef97b36",
+              "name": "approved_by",
+              "value": "={{ $json.approved_by }}",
+              "type": "string"
+            },
+            {
+              "id": "205e90b2-5741-4204-8748-d279b581fa64",
+              "name": "dispatch_status",
+              "value": "ready_for_email_provider",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "dc5ab77e-f2cd-45fe-9f70-aea2a3dd3647",
+      "name": "create email preview"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "VbKERyS2qLfXXThx",
+          "mode": "list",
+          "cachedResultName": "nurture_queue",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/VbKERyS2qLfXXThx"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Get row(s)').item.json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "follow_up_status": "sent",
+            "sent_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "follow_up_type",
+              "displayName": "follow_up_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "follow_up_status",
+              "displayName": "follow_up_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email_subject",
+              "displayName": "email_subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "email_body",
+              "displayName": "email_body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "prepared_at",
+              "displayName": "prepared_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "scheduled_for",
+              "displayName": "scheduled_for",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "approved_by",
+              "displayName": "approved_by",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "approved_at",
+              "displayName": "approved_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "review_note",
+              "displayName": "review_note",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "sent_at",
+              "displayName": "sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        832,
+        0
+      ],
+      "id": "bf4c0302-46f3-46d3-906c-bc2ffc3b29bb",
+      "name": "Update row(s)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "create email preview",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create email preview": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "604d6ffd-69f1-4e38-9480-f6d1f714e2de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
+  },
+  "nodeGroups": [],
+  "id": "ZcAnGfsjC7hIob0l",
+  "tags": []
+}
