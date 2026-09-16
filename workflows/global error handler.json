@@ -1,0 +1,99 @@
+{
+  "name": "global error handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "040c09c6-f4ef-4bac-9281-b38363159c90",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1340ea91-446a-47ea-8556-bec7830730c0",
+              "name": "message",
+              "value": "={{ $json.execution.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "0cd0507e-24cc-4c36-814c-888a92fd67c3",
+              "name": "failed_workflow",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "ea7ef47d-9fd6-467a-96af-b7ae70c4de40",
+              "name": "execution_id",
+              "value": "={{ $json.execution.id }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ee93b3fd-95fa-48ae-b473-fa4c2876f72e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5a3086e2-3576-496e-b6f1-8e713685fb02",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "95b5be3b-97fa-4f0a-8f2d-8f43dc461312",
+  "meta": {
+    "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
+  },
+  "nodeGroups": [],
+  "id": "G8BH9jmEy93vFjyT",
+  "tags": []
+}

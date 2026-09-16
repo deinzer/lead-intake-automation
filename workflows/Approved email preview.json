@@ -61,6 +61,8 @@
       "id": "3a43eeb6-f55f-4e9a-bac4-0793c514f42c",
       "name": "Send a message",
       "webhookId": "fc6da00d-155f-4c71-abb1-8b651d67a386",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
       "credentials": {
         "gmailOAuth2": {
           "id": "GNrTBOcCD4bddHPt",
@@ -517,7 +519,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "43efab20-805a-47af-9692-c4658a560d2d",
+  "versionId": "edc927fb-2257-45d5-b19b-e323d87e49bc",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"

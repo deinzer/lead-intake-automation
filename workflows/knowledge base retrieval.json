@@ -7,7 +7,7 @@
       "typeVersion": 1,
       "position": [
         -96,
-        0
+        -128
       ],
       "id": "9a5300c6-d024-4c74-950a-f0aad82d2512",
       "name": "When clicking ‘Execute workflow’"
@@ -57,7 +57,7 @@
             {
               "id": "6e3a0f28-7656-4562-b7ec-4976765bfb22",
               "name": "message",
-              "value": "",
+              "value": "={{ $json.message }}",
               "type": "string"
             }
           ]
@@ -72,36 +72,6 @@
       ],
       "id": "b30fe661-1011-426e-bfb1-a4e187d7d315",
       "name": "test message"
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "dataTableId": {
-          "__rl": true,
-          "value": "11fTGJV6c1L2rbWa",
-          "mode": "list",
-          "cachedResultName": "knowledge base",
-          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/11fTGJV6c1L2rbWa"
-        },
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "topic",
-              "keyValue": "={{ $json.output.topic }}"
-            },
-            {}
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1.1,
-      "position": [
-        720,
-        0
-      ],
-      "id": "cb47c6da-c5a1-4efb-bc7e-1ecc77f4147d",
-      "name": "Get row(s)",
-      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -197,19 +167,78 @@
       ],
       "id": "83c2c9ea-830e-40c3-9bb8-1217d68e57a8",
       "name": "human escalation"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "7ac6960c-0e3e-4621-aa2d-bf00507b5593",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "11fTGJV6c1L2rbWa",
+          "mode": "list",
+          "cachedResultName": "knowledge base",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/11fTGJV6c1L2rbWa"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "topic",
+              "keyValue": "={{ $json.output.topic }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        0
+      ],
+      "id": "cb47c6da-c5a1-4efb-bc7e-1ecc77f4147d",
+      "name": "get rows",
+      "alwaysOutputData": true
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "customer_email": "max@example.com",
+          "raw_message": "I forgot my password, how do I reset it?",
+          "category": "account",
+          "urgency": "normal",
+          "order_number": null,
+          "ai_confidence": 1,
+          "ai_summary": "To reset your password, please visit the login page and click on 'Forgot Password'. Follow the instructions to reset your password. If you need further assistance, a support expert will be happy to help you shortly.",
+          "ticket_status": "ai_draft_prepared",
+          "assigned_queue": "account",
+          "created_at": "2026-09-16T15:30:23.439Z",
+          "id": 6,
+          "createdAt": "2026-09-16T15:30:23.443Z",
+          "updatedAt": "2026-09-16T15:30:25.066Z"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
   "connections": {
     "When clicking ‘Execute workflow’": {
       "main": [
-        [
-          {
-            "node": "test message",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Ollama Chat Model": {
@@ -238,18 +267,7 @@
       "main": [
         [
           {
-            "node": "Get row(s)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get row(s)": {
-      "main": [
-        [
-          {
-            "node": "If",
+            "node": "get rows",
             "type": "main",
             "index": 0
           }
@@ -284,14 +302,40 @@
           }
         ]
       ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "test message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get rows": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "G8BH9jmEy93vFjyT",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "e0bce44a-7956-4fdd-97de-ad44140480ec",
+  "versionId": "59151acf-dfe3-4d5e-b5c0-7ce2a5f82da7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
