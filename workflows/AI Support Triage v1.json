@@ -1,0 +1,706 @@
+{
+  "name": "AI Support Triage v1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "support-intake",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "506cc625-8cd1-48ca-b8ab-0a1a8c600dfa",
+      "name": "Webhook",
+      "webhookId": "7c92c986-7090-4173-a776-ac069882e451"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5707b5f6-8f94-4b34-97c1-58d5757c89fa",
+              "name": "customer_email",
+              "value": "={{ $json.body?.email || $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "f55f3362-11d1-4213-837c-f0245cbdf736",
+              "name": "raw_message",
+              "value": "={{ $json.body?.message || $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "2dd9e337-f762-48cf-9b05-8d5bdfd9d0f8",
+              "name": "received_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        192,
+        0
+      ],
+      "id": "29555e98-45f9-4211-9daa-8e91dce57589",
+      "name": "Prepare Support input"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.raw_message }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"category\": {\n  \"type\": [\"string\", \"null\"],\n  \"enum\": [\"billing\", \"technical\", \"account\", \"general\", null]\n},\n\"urgency\": {\n  \"type\": [\"string\", \"null\"],\n  \"enum\": [\"high\", \"normal\", \"low\", null]\n},\n    \"order_number\": {\n      \"type\": [\"string\", \"null\"]\n    },\n    \"ai_summary\": {\n      \"type\": \"string\"\n    },\n    \"ai_confidence\": {\n      \"type\": \"number\"\n    }\n},\n  \"required\": [\"category\", \"urgency\", \"order_number\", \"ai_summary\", \"ai_confidence\"]\n}",
+        "options": {
+          "systemPromptTemplate": "You are the support-ticket classifier for Acme Software, a B2B software company.\n\nYour task is to classify one incoming customer message. Do not answer the customer. Do not invent facts.\n\nFirst decide whether the message is actually about Acme Software’s product, account, subscription, payment, order, or technical use of its software.\n\nIf it is unrelated, spam, trolling, a personal question, or too unclear to connect to Acme Software, return:\n- category: null\n- urgency: null\n- order_number: null unless an order number is explicitly present\n- a short factual ai_summary\n- ai_confidence from 0 to 1\n\nDo not use category \"general\" for unrelated topics.\n\nFor real Acme Software support messages, choose exactly one category:\n\n- billing: payment failures, invoices, charges, refunds, pricing, or subscription billing\n- technical: bugs, errors, broken features, integrations, performance, or inability to use the software\n- account: login, password, account access, profile, permissions, or account settings\n- general: a real question about Acme Software’s product or support that does not fit the categories above\n\nChoose urgency:\n\n- high: the customer cannot use the service, reports a payment failure, reports possible security or data-loss risk, or describes time-critical business impact\n- normal: a regular support problem or request\n- low: a non-urgent question\n\nExtract order_number only when it is explicitly written in the message. Otherwise return null.\n\nWrite ai_summary as one short factual sentence. Do not add facts that the customer did not provide.\n\nSet ai_confidence from 0 to 1. Use a lower value when the message is ambiguous.\n\nExamples:\n\nMessage: \"How can I become better at football?\"\ncategory: null\nurgency: null\n\nMessage: \"What are your support opening hours?\"\ncategory: general\nurgency: low\n\nMessage: \"My payment failed again and our team is locked out.\"\ncategory: billing\nurgency: high\n\nMessage: \"Order ORD-4821 was charged twice.\"\ncategory: billing\nurgency: normal\norder_number: ORD-4821"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "05d10917-c167-4fb2-b368-eb7a9c1d4250",
+      "name": "classify support ticket"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        416,
+        176
+      ],
+      "id": "da77dbec-0c0e-435f-a93b-78ed673cf38c",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "mzgSRBMfUKH1VZpM",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "YAVkAQsEyqIVNmgX",
+          "mode": "list",
+          "cachedResultName": "support_tickets",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/YAVkAQsEyqIVNmgX"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customer_email": "={{ $('Prepare Support input').item.json.customer_email }}",
+            "raw_message": "={{ $('Prepare Support input').item.json.raw_message }}",
+            "category": "={{ $json.output.category }}",
+            "urgency": "={{ $json.output.urgency }}",
+            "order_number": "={{ $json.output.order_number }}",
+            "ai_summary": "={{ $json.output.ai_summary }}",
+            "ai_confidence": "={{ $json.output.ai_confidence }}",
+            "ticket_status": "new",
+            "assigned_queue": "={{ $json.output.category }}",
+            "created_at": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "urgency",
+              "displayName": "urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "order_number",
+              "displayName": "order_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_confidence",
+              "displayName": "ai_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_summary",
+              "displayName": "ai_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ticket_status",
+              "displayName": "ticket_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assigned_queue",
+              "displayName": "assigned_queue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        656,
+        0
+      ],
+      "id": "c9b177c9-b981-4467-aafe-6a4abded7bc7",
+      "name": "support_tickets"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "99d52e35-c2a3-4407-99f5-dbbf98502f37",
+              "leftValue": "={{ $json.ai_confidence }}",
+              "rightValue": 0.8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "1bea81e1-f7e5-4315-9cfd-35a95372a176",
+              "leftValue": "={{ $json.urgency }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        0
+      ],
+      "id": "77d78fce-b4a2-4d4b-997e-2871b6a5a21e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "YAVkAQsEyqIVNmgX",
+          "mode": "list",
+          "cachedResultName": "support_tickets",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/YAVkAQsEyqIVNmgX"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket_status": "waiting_for_human",
+            "assigned_queue": "priority_support"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "urgency",
+              "displayName": "urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "order_number",
+              "displayName": "order_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ai_confidence",
+              "displayName": "ai_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ai_summary",
+              "displayName": "ai_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ticket_status",
+              "displayName": "ticket_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assigned_queue",
+              "displayName": "assigned_queue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        96
+      ],
+      "id": "ee9731e3-d775-4ad3-9218-bad3fb20250d",
+      "name": "human escalation"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.raw_message }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"draft_response\": { \"type\": \"string\" }\n  },\n  \"required\": [\"draft_response\"]\n}",
+        "options": {
+          "systemPromptTemplate": "You are a helpful support agent for Acme Software.\nDraft a polite, professional response to the customer's message.\nUse the category and urgency provided to tailor the tone.\nKeep the response short and helpful.\nIf you don't have a specific answer, tell them a human expert will be with them shortly."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        -128
+      ],
+      "id": "84a95276-d361-42da-a3d5-a0d9f77eeb36",
+      "name": "draft support response"
+    },
+    {
+      "parameters": {
+        "model": "qwen2.5:7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -16
+      ],
+      "id": "a9ac8979-c461-4a6c-8ca2-b4cc1daa86db",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "BNQmbGhrIOyzTSi3",
+          "name": "Ollama account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "YAVkAQsEyqIVNmgX",
+          "mode": "list",
+          "cachedResultName": "support_tickets",
+          "cachedResultUrl": "/projects/DEoLwj9vEdMa1rcU/datatables/YAVkAQsEyqIVNmgX"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('support_tickets').item.json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ai_summary": "={{ $json.output.draft_response }}",
+            "ticket_status": "ai_draft_prepared"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "raw_message",
+              "displayName": "raw_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "urgency",
+              "displayName": "urgency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "order_number",
+              "displayName": "order_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ai_confidence",
+              "displayName": "ai_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ai_summary",
+              "displayName": "ai_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ticket_status",
+              "displayName": "ticket_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "assigned_queue",
+              "displayName": "assigned_queue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        -128
+      ],
+      "id": "58ba979d-3dfa-4ae1-b82f-b326711f1f39",
+      "name": "Update row(s)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Support input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Support input": {
+      "main": [
+        [
+          {
+            "node": "classify support ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "classify support ticket",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "classify support ticket": {
+      "main": [
+        [
+          {
+            "node": "support_tickets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "support_tickets": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "draft support response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "human escalation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "draft support response",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "draft support response": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c197352f-dbe1-4f1a-b380-dbfded2dda76",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "173f2b233992c3636686e22ebde9bd7702a368cd2a06b401225a44bcebcbbbfe"
+  },
+  "nodeGroups": [],
+  "id": "vBqWDs3CNQ56dJdd",
+  "tags": []
+}
